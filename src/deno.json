@@ -25,6 +25,6 @@
 	},
 	"tasks": {
 		"build": "deno run --allow-read --allow-run --allow-write build.ts",
-		"start": "deno run -A --env --check main.ts"
+		"start": "deno task build && deno run -A --env --check main.ts"
 	}
 }
