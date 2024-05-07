@@ -2,6 +2,8 @@ import { fetch as sapphireFetch } from "@sapphire/fetch";
 import { type ChatInputCommand, type KitsuAPIData } from "../types.d.ts";
 import {
 	type APIInteractionResponseDeferredChannelMessageWithSource,
+	ButtonStyle,
+	ComponentType,
 	InteractionResponseType,
 } from "@djs/core";
 import { basename } from "@std/url/basename";
@@ -23,9 +25,21 @@ export default {
 				interaction.application_id,
 				interaction.token,
 				{
+					content:
+						"Follow Kitsunee on Ganknow to get more exclusive contents~! ✨",
 					files: [{
 						name: basename(imageUrl),
 						data: new Uint8Array(data),
+					}],
+					components: [{
+						type: ComponentType.ActionRow,
+						components: [{
+							type: ComponentType.Button,
+							style: ButtonStyle.Link,
+							label: "— See Ganknow!",
+							url: "https://ganknow.com/kitsunee",
+							emoji: { id: "1237285258534060102" },
+						}],
 					}],
 				},
 			);
