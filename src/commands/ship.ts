@@ -58,6 +58,8 @@ export default {
 					),
 				);
 
+				// TODO(@mazzbrooh): handle someone variable
+
 				context.drawImage(heart, 720, 0, 720, 720);
 
 				context.beginPath();
