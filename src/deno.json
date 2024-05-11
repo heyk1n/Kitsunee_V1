@@ -21,10 +21,11 @@
 		"@sapphire/fetch": "npm:@sapphire/fetch@3.0.2",
 		"@std/encoding": "jsr:@std/encoding@^0.224.0",
 		"@std/http": "jsr:@std/http@^0.224.0",
-		"@std/url": "jsr:@std/url@^0.224.0"
+		"@std/url": "jsr:@std/url@^0.224.0",
+		"canvas": "https://deno.land/x/canvas@v1.4.1/mod.ts"
 	},
 	"tasks": {
 		"build": "deno run --allow-read --allow-run --allow-write build.ts",
-		"start": "deno task build && deno run -A --env --check main.ts"
+		"start": "deno task build && deno run -A --env --watch --check main.ts"
 	}
 }
