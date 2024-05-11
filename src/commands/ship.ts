@@ -2,6 +2,7 @@ import { type ChatInputCommand } from "../types.d.ts";
 import {
 	type APIApplicationCommandInteractionDataUserOption,
 	type APIInteractionResponseChannelMessageWithSource,
+	type APIInteractionResponseDeferredChannelMessageWithSource,
 	ApplicationCommandOptionType,
 	InteractionResponseType,
 } from "@djs/core";
@@ -34,31 +35,50 @@ export default {
 			return Response.json(
 				{
 					type: InteractionResponseType.ChannelMessageWithSource,
-					data: { content: "This command isn't available in dm." },
+					data: { content: "This command isn't available in DM." },
 				} satisfies APIInteractionResponseChannelMessageWithSource,
 			);
 		} else {
 			queueMicrotask(async () => {
 				const percentage = Math.floor(Math.random() * 101);
+				const match = Math.floor(percentage / 25);
+
+				const matchMessages = [
+					"Looks like it's not meant to be",
+					"Seems like a bit of mismatch, huh?",
+					"Not quite hitting the mark, huh?",
+					"Let's give it a shot, maybe they'll end up together!",
+					"You two are a perfect match!",
+				];
 
 				const canvas = createCanvas(2160, 720);
 				const context = canvas.getContext("2d");
 				const heart = await loadImage(
-					`./assets/heart${Math.floor(percentage / 25)}.png`,
+					`./assets/heart${match}.png`,
 				);
 				const targetId = interaction.data.options?.find((ctx) =>
 					ctx.name === "target"
 				) as APIApplicationCommandInteractionDataUserOption;
+				const someoneId = interaction.data.options?.find((ctx) =>
+					ctx.name === "someone"
+				) as APIApplicationCommandInteractionDataUserOption;
 				const target =
 					interaction.data.resolved!.users![targetId.value];
+				const someone = someoneId
+					? interaction.data.resolved!.users![someoneId.value]
+					: interaction.member.user;
 				const targetAvatar = await loadImage(
 					await sapphireFetch(
 						userAvatar(api.rest.cdn, target),
 						FetchResultTypes.Buffer,
 					),
 				);
-
-				// TODO(@mazzbrooh): handle someone variable
+				const someoneAvatar = await loadImage(
+					await sapphireFetch(
+						userAvatar(api.rest.cdn, someone),
+						FetchResultTypes.Buffer,
+					),
+				);
 
 				context.drawImage(heart, 720, 0, 720, 720);
 
@@ -71,12 +91,16 @@ export default {
 				context.clip();
 
 				context.drawImage(targetAvatar, 0, 0, 720, 720);
-				context.drawImage(targetAvatar, 1440, 0, 720, 720);
+				context.drawImage(someoneAvatar, 1440, 0, 720, 720);
 
 				await api.interactions.editReply(
 					interaction.application_id,
 					interaction.token,
 					{
+						content:
+							`**${target.username}** and **${someone.username}** are ${percentage}% match! 💞\n${
+								matchMessages[match]
+							}`,
 						files: [{
 							name: "ship.png",
 							data: await canvas.encode("png"),
@@ -87,9 +111,9 @@ export default {
 
 			return Response.json(
 				{
-					type: InteractionResponseType.ChannelMessageWithSource,
-					data: { content: "Work in progress." },
-				} satisfies APIInteractionResponseChannelMessageWithSource,
+					type: InteractionResponseType
+						.DeferredChannelMessageWithSource,
+				} satisfies APIInteractionResponseDeferredChannelMessageWithSource,
 			);
 		}
 	},
