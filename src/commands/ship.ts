@@ -103,7 +103,7 @@ export default {
 							}`,
 						files: [{
 							name: "ship.png",
-							data: await canvas.encode("png"),
+							data: await canvas.toBuffer(),
 						}],
 					},
 				);
