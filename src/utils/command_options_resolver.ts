@@ -31,10 +31,12 @@ export function getUserOption(
 		required,
 	);
 
-	if (!option && required) {
-		throw new Error(`No user option found with name ${name}!`);
+	if (!option) {
+		if (required) {
+			throw new Error(`No user option found with name ${name}!`);
+		}
 	} else {
-		return interaction.data.resolved!.users![option!.value];
+		return interaction.data.resolved!.users![option.value];
 	}
 }
 
@@ -68,8 +70,10 @@ export function getOption<
 	const option = options?.find((ctx) =>
 		ctx.name === name && ctx.type === type
 	) as T;
-	if (!option && required) {
-		throw new Error(`No option with name ${name} and type ${type}.`);
+	if (!option) {
+		if (required) {
+			throw new Error(`No option with name ${name} and type ${type}.`);
+		}
 	} else {
 		return option;
 	}
@@ -88,8 +92,10 @@ export function getSubcommand(
 	required?: boolean,
 ): APIApplicationCommandInteractionDataSubcommandOption | undefined {
 	const option = interaction.data.options?.find(isSubcommandOption);
-	if (!option && required) {
-		throw new Error(`No subcommand option found!`);
+	if (!option) {
+		if (required) {
+			throw new Error(`No subcommand option found!`);
+		}
 	} else {
 		return option;
 	}
@@ -108,8 +114,10 @@ export function getSubcommandGroup(
 	required?: boolean,
 ): APIApplicationCommandInteractionDataSubcommandGroupOption | undefined {
 	const option = interaction.data.options?.find(isSubcommandGroupOption);
-	if (!option && required) {
-		throw new Error(`No subcommand group option found!`);
+	if (!option) {
+		if (required) {
+			throw new Error(`No subcommand group option found!`);
+		}
 	} else {
 		return option;
 	}
